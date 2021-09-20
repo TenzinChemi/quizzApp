@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /**
- * Admin login 
+ * Admin login
  */
 
 
@@ -23,7 +23,7 @@ Route::post('post-login',[UserController::class,'postLogin'])->name('login.post'
 Route::group(['middleware' => ['auth','isAdmin']], function(){
 
     Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
-  
+
 
 
     //Endpoints for subjects
@@ -39,10 +39,11 @@ Route::group(['middleware' => ['auth','isAdmin']], function(){
     // Route::get('question',[SingleQuestionController::class,'index']);
     Route::get('singleQuestion/create',[SingleQuestionController::class,'create']);
     Route::match(array('GET','POST'),'singleQuestion/store',[SingleQuestionController::class,'store'])->name('singlequestion.store');
-    
-    //endpoints All questions 
+
+    //endpoints All questions
     Route::get('question',[AllQuestionController::class,'index']);
-    Route::get('question/category/{id}',[AllQuestionController::class,'fetchSubjectCategory'])->name('question.category');
+    Route::post('getSubjectCategory',[AllQuestionController::class,'getSubjectCategory']);
+    Route::post('getQuestion',[AllQuestionController::class,'getQuestion']);
 
     Route::post('logout',[UserController::class,'logout']);
 
@@ -55,5 +56,5 @@ Route::group(['middleware' => ['auth','isAdmin']], function(){
 
 
 
-   
+
 

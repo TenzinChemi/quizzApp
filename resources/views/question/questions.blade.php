@@ -6,22 +6,22 @@
             @if($subjects->count() > 0)
                 <label for="subject">Select Subject</label>
                 <select class="form-control" id="subject" name="subject">
+                    <option value="">Select Subject</option>
                     @foreach ($subjects as $subject)
                         <option value="{{ $subject->id }}">{{ $subject->subject }}</option>
                     @endforeach
                 </select>
-
-                <label for="topics"> Select Subject Topics </label>
-                <select class="form-control" name="topic" id="topic" required>
-                <option value=""> Select </option>
-                @foreach($subject_category as $subCategory)
-                    <option value="{{ $subCategory->id }}"> {{ $subCategory->name }}</option>
-                @endforeach
-            </select>
-   
+                <label for="subject category">Select Subject Topic</label>
+                <select class="form-control" id="topic" name="topic">
+                    <option value="">Select Subject</option>
+                </select>
+                <label for="questions">Select Subject Topic</label>
+                <select class="form-control" id="question" name="question">
+                    <option value="">Select Question</option>
+                </select>
             @else
                 <div class="alert alert-primary" role="alert">
-                    <strong>There is no subject to choose</strong> 
+                    <strong>There is no subject to choose</strong>
                     <a href="{{ route('subject.create') }}" class="alert-link">Create Subject</a>
                 </div>
             @endif
@@ -32,7 +32,7 @@
 
 @section('js')
 
-<script src="/js/jquery.dataTables.min.js"></script>
+{{-- <script src="/js/jquery.dataTables.min.js"></script>
 
 <script src="/js/dataTables.bootstrap4.min.js"></script>
 
@@ -40,35 +40,35 @@
 
 <script src="/js/vfs_fonts.js"></script>
 
-<script src="/js/buttons.html5.min.js"></script>
-
- <script type="text/javascript">
-            $(function()
-            {
-                    jQuery('select[name="subject"]').on('change',function(){
-                       var subjectID = jQuery(this).val();
-                       if(subjectID)
-                       {
-                          jQuery.ajax({
-                             url : 'question/category' +subjectID,
-                             type : "GET",
-                             dataType : "json",
-                             success:function(data)
-                             {
-                                console.log(data);
-                                jQuery('select[name="topic"]').empty();
-                                jQuery.each(data, function(key,value){
-                                   $('select[name="topic"]').append('<option value="'+ key +'">'+ value +'</option>');
-                                });
-                             }
-                          });
-                       }
-                       else
-                       {
-                          $('select[name="subCategory"]').empty();
-                       }
-                    });
+<script src="/js/buttons.html5.min.js"></script> --}}
+<script src="/js/jquery.min.js"></script>
+<script>
+    jQuery(document).ready(function(){
+        jQuery('#subject').change(function(){
+            let subjectID = jQuery(this).val();
+            // alert(subjectID);
+            jQuery.ajax({
+                url:'getSubjectCategory',
+                type:'post',
+                data:'subjectID='+subjectID+'&_token={{ csrf_token() }}',
+                success:function(result){
+                    jQuery('#topic').html(result)
+                }
             });
+        });
+        jQuery('#topic').change(function(){
+            let subjectCategoryID = jQuery(this).val();
+            // alert(subjectCategoryID);
+            jQuery.ajax({
+                url:'getQuestion',
+                type:'post',
+                data:'subjectCategoryID='+subjectCategoryID+'&_token={{ csrf_token() }}',
+                success:function(result){
+                    jQuery('#question').html(result)
+                }
+            });
+        });
+    });
 </script>
 
 
